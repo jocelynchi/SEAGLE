@@ -1,0 +1,24 @@
+authors:
+  Jocelyn Chi:
+    href: "http://jocelynchi.com"
+  Ilse Ipsen:
+    href: "https://ipsen.math.ncsu.edu/"
+  Jung-Ying Tzeng:
+    href: "https://www4.stat.ncsu.edu/~jytzeng/"
+
+reference:
+- title: "Usage Functions"
+- contents:
+  - prep.SEAGLE
+  - SEAGLE
+  - makeSimData
+- title: "Example Data"
+- contents:
+  - cosihap
+- title: "Helper Functions"
+- contents:
+  - Rinv.AtG
+  - Rinv.u
+  - Vinv
+  - applyAt
+  - estimate.vc

@@ -5,7 +5,7 @@
 #'
 #' @param H Matrix of haplotype data (e.g. cosihap)
 #' @param n Number of individuals
-#' @param L Number of SNPs (Default is 100)
+#' @param L Number of SNPs in the G matrix (Default is 100), should be a value between 1 and 604
 #' @param maf Minor allele frequency (Default is 0.01)
 #' @param gamma0 gamma0 Fixed effect coefficient for intercept (Default is 1)
 #' @param gammaX gammaX Fixed effect coefficient for confounding covariates (Default is 1)
@@ -14,6 +14,8 @@
 #' @param gammaGE gammaGE Fixed effect coefficient for GxE interaction effect
 #' @param causal Number of causal SNPs (default is 40)
 #' @param seed Seed (Default is 12345)
+#'
+#' @return Synthetic dataset containing y, X, E, G, epsilon, and number of causal SNPs
 #'
 #' @importFrom stats rnorm
 #' @import Matrix
@@ -26,6 +28,10 @@
 makeSimData <- function(H, n, L=100, maf=0.01, gamma0=1, gammaX=1, gammaE=1, gammaG, gammaGE, causal=40, seed=12345) {
 
   N <- nrow(H)
+
+  if (L <= 1 | L >= 604) {
+    stop("L must be between 1 and 604.")
+  }
 
   # Sample L of the MAF SNPs
   AF <- apply(H, 2, sum)/N

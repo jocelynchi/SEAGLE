@@ -4,16 +4,19 @@
 \alias{SEAGLE}
 \title{Compute score-like test statistic and p-value for GxE test with SEAGLE algorithm}
 \usage{
-SEAGLE(obj.SEAGLE, init.tau, init.sigma, pv = "liu")
+SEAGLE(obj.SEAGLE, init.tau = 0.5, init.sigma = 0.5, pv = "liu")
 }
 \arguments{
 \item{obj.SEAGLE}{Input data prepared with prep.SEAGLE function}
 
-\item{init.tau}{Initial estimate for tau}
+\item{init.tau}{Initial estimate for tau (Default is 0.5)}
 
-\item{init.sigma}{Initial estimate for sigma}
+\item{init.sigma}{Initial estimate for sigma (Default is 0.5)}
 
 \item{pv}{Method of obtaining p-value (Either "liu" or "davies", Default is liu)}
+}
+\value{
+Score-like test statistic T for the GxE effect and corresponding p-value
 }
 \description{
 This function computes the score test statistic and corresponding

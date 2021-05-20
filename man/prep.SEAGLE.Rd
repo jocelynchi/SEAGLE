@@ -2,12 +2,12 @@
 % Please edit documentation in R/prepData.R
 \name{prep.SEAGLE}
 \alias{prep.SEAGLE}
-\title{Prep data for input into SEAGLE function}
+\title{Prepare data for input into SEAGLE function}
 \usage{
 prep.SEAGLE(y, X, intercept, E, G)
 }
 \arguments{
-\item{y}{y Vector of observed phenotypes}
+\item{y}{Vector of observed phenotypes}
 
 \item{X}{Matrix of covariates without genetic marker interactions}
 
@@ -16,6 +16,9 @@ prep.SEAGLE(y, X, intercept, E, G)
 \item{E}{E Vector of environmental covariates}
 
 \item{G}{G Matrix of genotype data}
+}
+\value{
+List object containing prepared data for input into SEAGLE function
 }
 \description{
 This function checks and formats data for input into SEAGLE function

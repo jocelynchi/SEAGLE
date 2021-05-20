@@ -11,6 +11,9 @@ applyAt(qrXtilde, RHS)
 
 \item{RHS}{Object on right hand side of null of Xtilde^T}
 }
+\value{
+Matrix or vector resulting from left multiplication of At with matrix or vector input RHS
+}
 \description{
 Function for applying t(A) on the left for REML EM
 }

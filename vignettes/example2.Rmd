@@ -1,11 +1,13 @@
 ---
-title: "Example 2: GWAS or Next Generation Sequencing Data"
+title: "Example 2: Using SEAGLE with Simulated Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{example-genetic-data-input}
+  %\VignetteIndexEntry{example-matrix}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+This tutorial demonstrates how to use the `SEAGLE` package when the user inputs a matrix ${\bf G}$.  We'll begin by loading the `SEAGLE` package.
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -14,102 +16,34 @@ knitr::opts_chunk$set(
 )
 ```
 
-This tutorial demonstrates how to use the `SEAGLE` package when the genotype data are from GWAS studies (.bed + .bim + .fam) or next generation sequencing studies (.vcf).  We recommend first converting these data into .raw files using the [PLINK](https://zzz.bwh.harvard.edu/plink/) software.
-
-Examples files containing `1kg_phase1_chr22.bed`, `1kg_phase1_chr22.bim`, `1kg_phase1_chr22.fam`, and `1kg_phase1_chr22.vcf` files and a corresponding gene list in `glist-hg19` can be downloaded via the `SEAGLE.zip` file from [http://jocelynchi.com/SEAGLE/](http://jocelynchi.com/SEAGLE/).  To follow along with the PLINK conversion procedures, you will first need to install the [PLINK](https://zzz.bwh.harvard.edu/plink/) software and unzip the example `SEAGLE.zip` file.  Afterwards, you can type the PLINK commands below in a command prompt or terminal window in the folder where these files are located. This will produce .raw files that you can read into R to obtain the relevant genetic marker matrix ${\bf G}$ for input into `SEAGLE`.
-
-## Preparing GWAS Data with PLINK
-
-For GWAS data in the .bed + .bim + .fam format, we recommend first converting to the .raw format with the PLINK software.  To illustrate single gene analysis, we employ the gene ACR as an example and type the following commands in command prompt or terminal to produce the corresponding .raw file.
-
-```
-plink --bfile 1kg_phase1_chr22 --make-set glist-hg19 --gene ACR --out ACR --export A
-```
-
-To illustrate multiple gene analyses, we employ the sequence of genes from A4GALT to ACR as an example and type the following commands in command prompt or terminal to produce the corresponding .raw file.
-
-```
-plink --bfile 1kg_phase1_chr22 --make-set glist-hg19 --gene A4GALT ACR --out A4GALT_ACR --export A
-```
-
-## Preparing Next Generation Sequencing Data with Plink
-
-For next generation sequencing data in the .vcf format, we recommend first converting to the .raw format with the PLINK software.  To illustrate single gene analyses, we employ the gene ACR as an example and type the following commands in command prompt or terminal to produce the corresponding .raw file.
-
-```
-plink --vcf 1kg_phase1_chr22.vcf --make-set glist-hg19 --gene ACR --out ACR --export A
-```
-
-To illustrate multiple gene analyses, we employ the sequence of genes from A4GALT to ACR as an example and type the following commands in command prompt or terminal to produce the corresponding .raw file.
-
-```
-plink --vcf 1kg_phase1_chr22.vcf --make-set glist-hg19 --gene A4GALT ACR --out A4GALT_ACR --export A
-```
-
-## Loading .raw files into R and extracting the genetic marker matrix ${\bf G}$
-
-Now that we have the genotype data in the .raw format, we can load it into R as follows.  We'll first load the `SEAGLE` package.
-
 ```{r setup}
 library(SEAGLE)
 ```
 
-The following code will load the `ACR.raw` file produced from the PLINK conversion for GWAS data for single gene analysis described above.  Of course, the actual file location will depend on where you stored the results of the PLINK conversion on your local drive.
+As an example, we'll generate some synthetic data for usage in this tutorial.  Let's consider a dataset with $n=5000$ individuals and $L=100$ loci, where the first $40$ are causal.  
 
-```
-acr <- read.delim("ACR.raw", sep=" ")
-```
+The `makeSimData` function generates a covariate matrix $\widetilde{\bf X} \in \mathbb{R}^{n \times 3}$, where the first column is the all ones vector for the intercept and the second and third columns are ${\bf X} \sim \text{N}(0,1)$ and ${\bf E}  \sim \text{N}(0,1)$, respectively.  The last two columns are scaled to have $0$ mean and unit variance.
 
-As an example, we've included the `ACR.raw` file in the `extdata` folder of this package.  The following code loads that file so we can use it in this tutorial.
-
-```{r}
-acr_loc <- system.file("extdata", "ACR.raw", package = "SEAGLE")
-acr <- read.delim(acr_loc, sep=" ")
-```
-
-We can take a quick look at the resulting `acr` object.  The first 6 columns correspond to identifying information.
+The `makeSimData` function additionally generates the genetic marker matrix ${\bf G}$ with synthetic haplotype data from the COSI software.  Detailed procedures for generating ${\bf G}$ can be found in the accompanying journal manuscript.  Finally, the `makeSimData` function also generates a continuous phenotype ${\bf y}$ according to the following fixed effects model
+$$
+{\bf y} = \tilde{\bf X} \boldsymbol{\gamma}_{\widetilde{\bf X}} + {\bf G}\boldsymbol{\gamma}_{G} + \text{diag}(E){\bf G}\boldsymbol{\gamma}_{GE} + {\bf e}.
+$$
+Here, $\boldsymbol{\gamma}_{\tilde{\bf X}}$ is the all ones vector of length $P=3$, $\boldsymbol{\gamma}_{G} \in \mathbb{R}^{L}$, $\boldsymbol{\gamma}_{GE}\in \mathbb{R}^{L}$, and ${\bf e} \sim \text{N}({\bf 0}, \sigma\, {\bf I}_{n})$.  The entries of $\boldsymbol{\gamma}_{G}$ and $\boldsymbol{\gamma}_{GE}$ pertaining to causal loci are set to be $\gamma_{G}$ = `gammaG` and $\gamma_{GE}$ = `gammaGE`, respectively. The remaining entries of $\boldsymbol{\gamma}_{G}$ and $\boldsymbol{\gamma}_{GE}$ pertaining to non-causal loci are set to $0$.
 
 ```{r}
-dim(acr)
-head(acr)
+dat <- makeSimData(H=cosihap, n=5000, L=100, gammaG=1, gammaGE=0, causal=40, seed=1)
+
 ```
 
-The remaining columns contain our genetic marker matrix ${\bf G}$.  We'll extract these to input into `SEAGLE`.
-
-```{r}
-G <- as.matrix(acr[,-c(1:6)])
-dim(G)
-```
-
-## Running SEAGLE
-
-As an example, we'll generate synthetic phenotype, ${\bf y}$, and covariate data, ${\bf X}$ and ${\bf E}$.
-
-```{r}
-# Determine number of individuals and loci
-n <- dim(G)[1]
-L <- dim(G)[2]
-
-# Generate synthetic phenotype and covariate data
-set.seed(1)
-y <- 2 * rnorm(n)
-
-set.seed(2)
-X <- rnorm(n)
-
-set.seed(3)
-E <- rnorm(n)
-```
-
-Now that we have ${\bf y}$, ${\bf X}$, ${\bf E}$, and ${\bf G}$, we can prepare our data for input into `SEAGLE`.  We will input our ${\bf y}$, ${\bf X}$, ${\bf E}$, and ${\bf G}$ into the `prep.SEAGLE` function.  The `intercept = 0` parameter indicates that the first column of ${\bf X}$ is not the all ones vector for the intercept.
+Now that we have our data, we can prepare it for use in the SEAGLE algorithm. We will input our ${\bf y}$, ${\bf X}$, ${\bf E}$, and ${\bf G}$ into the `prep.SEAGLE` function.  The `intercept = 1` parameter indicates that the first column of ${\bf X}$ is the all ones vector for the intercept.
 
 This preparation procedure formats the input data for the `SEAGLE` function by checking the dimensions of the input data.  It also pre-computes a QR decomposition for $\widetilde{\bf X}$.
 
 ```{r}
-objSEAGLE <- prep.SEAGLE(y=y, X=X, intercept=0, E=E, G=G)
+objSEAGLE <- prep.SEAGLE(y=dat$y, X=dat$X, intercept=1, E=dat$E, G=dat$G)
 ```
 
-Now we can input the prepared data into the `SEAGLE` function to compute the score-like test statistic $T$ and its corresponding p-value.  The `init.tau` and `init.sigma` parameters are the initial values for estimating $\tau$ and $\sigma$ in the REML EM algorithm.
+Finally, we'll input the prepared data into the `SEAGLE` function to compute the score-like test statistic $T$ and its corresponding p-value.  The `init.tau` and `init.sigma` parameters are the initial values for $\tau$ and $\sigma$ employed in the REML EM algorithm.
 
 ```{r}
 res <- SEAGLE(objSEAGLE, init.tau=0.5, init.sigma=0.5)
@@ -118,3 +52,4 @@ res$pv
 ```
 
 The score-like test statistic $T$ for the G$\times$E effect and its corresponding p-value can be found in `res$T` and `res$pv`, respectively.
+

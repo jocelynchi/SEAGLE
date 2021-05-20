@@ -38,4 +38,7 @@ The accompanying journal manuscript for `SEAGLE` can be found at [arXiv:2105.032
 }
 ```
 
+## Acknowledgments
+
+Many thanks to Yueyang Huang for his help with generating the example data and PLINK1.9 code for the tutorials.
 

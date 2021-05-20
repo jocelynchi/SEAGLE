@@ -17,6 +17,9 @@ Rinv.AtG(G, AtG, GtAAtG, tau, sigma)
 
 \item{sigma}{Variance component from model noise epsilon}
 }
+\value{
+Matrix resulting from left multiplication of Rinv with input matrix AtG
+}
 \description{
 Function for applying R inverse to AtG in REML EM algorithm
 }

@@ -1,12 +1,14 @@
-#' Prep data for input into SEAGLE function
+#' Prepare data for input into SEAGLE function
 #'
 #' This function checks and formats data for input into SEAGLE function
 #'
-#' @param y y Vector of observed phenotypes
+#' @param y Vector of observed phenotypes
 #' @param X Matrix of covariates without genetic marker interactions
 #' @param intercept 1 if the first column of X is the all ones vector, 0 otherwise
 #' @param E E Vector of environmental covariates
 #' @param G G Matrix of genotype data
+#'
+#' @return List object containing prepared data for input into SEAGLE function
 #'
 #' @examples
 #' #dat <- makeSimData(H=cosihap, n=5000, L=100, gammaG=1, gammaGE=0, causal=40, seed=1)

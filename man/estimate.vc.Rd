@@ -10,8 +10,8 @@ estimate.vc(
   qrXtilde,
   beta,
   G,
-  init.sigma = 1,
-  init.tau = 1,
+  init.sigma = 0.5,
+  init.tau = 0.5,
   tol = 0.001,
   maxiters = 1000
 )
@@ -19,7 +19,7 @@ estimate.vc(
 \arguments{
 \item{y}{Vector of observed phenotypes}
 
-\item{Xtilde}{Matrix of covariates (first column contains the intercept)}
+\item{Xtilde}{Matrix of covariates (first column contains the intercept, last column contains the E factor for studying the GxE effect)}
 
 \item{qrXtilde}{Object containing QR decomposition of Xtilde}
 
@@ -27,13 +27,16 @@ estimate.vc(
 
 \item{G}{Matrix of genotype markers}
 
-\item{init.sigma}{Initial sigma input (Default is 1)}
+\item{init.sigma}{Initial sigma input (Default is 0.5)}
 
-\item{init.tau}{Initial tau input (Default is 1)}
+\item{init.tau}{Initial tau input (Default is 0.5)}
 
 \item{tol}{Tolerance for convergence (Default is 1e-3)}
 
 \item{maxiters}{Maximum number of iterations (Default is 1000)}
+}
+\value{
+Estimates for tau and sigma
 }
 \description{
 REML EM algorithm for estimating variance components

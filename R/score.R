@@ -5,9 +5,11 @@
 #' that have been prepared with the prep.SEAGLE function
 #'
 #' @param obj.SEAGLE Input data prepared with prep.SEAGLE function
-#' @param init.tau Initial estimate for tau
-#' @param init.sigma Initial estimate for sigma
+#' @param init.tau Initial estimate for tau (Default is 0.5)
+#' @param init.sigma Initial estimate for sigma (Default is 0.5)
 #' @param pv Method of obtaining p-value (Either "liu" or "davies", Default is liu)
+#'
+#' @return Score-like test statistic T for the GxE effect and corresponding p-value
 #'
 #' @importFrom CompQuadForm davies liu
 #'
@@ -18,7 +20,7 @@
 #'
 #' @export
 #'
-SEAGLE <- function(obj.SEAGLE, init.tau, init.sigma, pv="liu") {
+SEAGLE <- function(obj.SEAGLE, init.tau=0.5, init.sigma=0.5, pv="liu") {
 
   y <- obj.SEAGLE$y
   Xtilde <- obj.SEAGLE$Xtilde
@@ -75,15 +77,17 @@ SEAGLE <- function(obj.SEAGLE, init.tau, init.sigma, pv="liu") {
   }
 }
 
-#' Function for applying V inverse in EM algorithm
+#' Function for applying V inverse in Algorithm 1
 #'
-#' This function applies V inverse using the Woodbury matrix identity
+#' This function applies V inverse via the Woodbury matrix identity
 #'
 #' @param G Matrix of genotype markers (size n x L)
 #' @param qrM Pre-computation for LxL linear system solve
 #' @param tau_over_sigma Tau over sigma from precomputation
 #' @param sigma Variance component from model noise epsilon
 #' @param RHS Matrix or vector on right-hand side of V inverse
+#'
+#' @return Matrix or vector resulting from left multiplication of Vinv with input RHS
 #'
 Vinv <- function(G, qrM, tau_over_sigma, sigma, RHS) {
 

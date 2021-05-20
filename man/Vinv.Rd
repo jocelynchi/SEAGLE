@@ -2,7 +2,7 @@
 % Please edit documentation in R/score.R
 \name{Vinv}
 \alias{Vinv}
-\title{Function for applying V inverse in EM algorithm}
+\title{Function for applying V inverse in Algorithm 1}
 \usage{
 Vinv(G, qrM, tau_over_sigma, sigma, RHS)
 }
@@ -17,6 +17,9 @@ Vinv(G, qrM, tau_over_sigma, sigma, RHS)
 
 \item{RHS}{Matrix or vector on right-hand side of V inverse}
 }
+\value{
+Matrix or vector resulting from left multiplication of Vinv with input RHS
+}
 \description{
-This function applies V inverse using the Woodbury matrix identity
+This function applies V inverse via the Woodbury matrix identity
 }

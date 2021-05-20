@@ -1,0 +1,119 @@
+---
+title: "Example 4: Using SEAGLE for Chromosome-Wide Gene-Based Analysis"
+output: pdf_document
+vignette: >
+  %\VignetteIndexEntry{example-genetic-data-input}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This tutorial demonstrates how to use the `SEAGLE` package when the genotype data are from GWAS studies (.bed + .bim + .fam) or next generation sequencing studies (.vcf).  We recommend using PLINK1.9 available from [https://www.cog-genomics.org/plink/1.9/](https://www.cog-genomics.org/plink/1.9/) to generate a .raw file (see [https://www.cog-genomics.org/plink/2.0/formats#raw](https://www.cog-genomics.org/plink/2.0/formats#raw)) for each of the SNP sets. The .raw file records the allelic dosage for each SNP.
+
+Examples files containing `1kg_phase1_chr22.bed`, `1kg_phase1_chr22.bim`, `1kg_phase1_chr22.fam`, and `1kg_phase1_chr22.vcf` files and a corresponding gene list in `glist-hg19` can be downloaded via the `SEAGLE.zip` file from [http://jocelynchi.com/SEAGLE/](http://jocelynchi.com/SEAGLE/).  To follow along with the PLINK conversion procedures, you will first need to install the PLINK1.9 from [https://www.cog-genomics.org/plink/1.9/](https://www.cog-genomics.org/plink/1.9/) software and unzip the example `SEAGLE.zip` file.  Afterwards, you can type the PLINK commands below in a command prompt or terminal window in the folder where these files are located. This will produce .raw files that you can read into R to obtain the relevant genetic marker matrix ${\bf G}$ for input into `SEAGLE`.
+
+## Preparing GWAS Data with PLINK1.9
+
+For GWAS data in the .bed + .bim + .fam format, we recommend first converting to the .raw format with PLINK1.9.  To illustrate chromosome-wide gene-based analysis, we employ all the genes in chr22 as an example.  We type the following commands in command prompt or terminal to produce a .raw file for each gene.  Each .raw file includes all SNPs for the corresponding gene.
+
+```
+
+```
+
+## Preparing Next Generation Sequencing Data with PLINK1.9
+
+For next generation sequencing data in the .vcf format, we recommend first converting to the .raw format with PLINK1.9.  To illustrate the analysis of a SNP set from a single gene, we employ the gene ACR as an example.  We type the following commands in command prompt or terminal to produce the corresponding .raw file, which includes all SNPs from gene ACR.
+
+```
+plink --vcf 1kg_phase1_chr22.vcf --make-set glist-hg19 --gene ACR --out ACR --export A
+```
+
+To illustrate the analysis of a SNP set from multiple genes, we employ the sequence of genes from A4GALT and ACR as an example.  We type the following commands in command prompt or terminal to produce the corresponding .raw file, which includes all SNPs from genes A4GALT and ACR.
+
+```
+plink --vcf 1kg_phase1_chr22.vcf --make-set glist-hg19 --gene A4GALT ACR --out A4GALT_ACR --export A
+```
+
+## Loading .raw files into R and extracting the genetic marker matrix ${\bf G}$
+
+Now that we have the genotype data in the .raw format, we can load it into R as follows.  We'll first load the `SEAGLE` package.
+
+```{r setup}
+library(SEAGLE)
+```
+
+The following code will load the `ACR.raw` file produced from the PLINK conversion for GWAS data for single gene analysis described above.  Of course, the actual file location will depend on where you stored the results of the PLINK conversion on your local drive.
+
+```
+acr <- read.delim("ACR.raw", sep=" ")
+```
+
+As an example, we've included the `ACR.raw` file in the `extdata` folder of this package.  The following code loads that file so we can use it in this tutorial.
+
+```{r}
+acr_loc <- system.file("extdata", "ACR.raw", package = "SEAGLE")
+acr <- read.delim(acr_loc, sep=" ")
+```
+
+We can take a quick look at the resulting `acr` object.  The first 6 columns correspond to identifying information.
+
+```{r}
+dim(acr)
+head(acr)
+```
+
+The remaining columns contain our genetic marker matrix ${\bf G}$.  We'll extract these to input into `SEAGLE`.
+
+```{r}
+G <- as.matrix(acr[,-c(1:6)])
+dim(G)
+```
+
+## Running SEAGLE
+
+As an example, we'll generate synthetic phenotype, ${\bf y}$, and covariate data, ${\bf X}$ and ${\bf E}$.
+
+```{r}
+# Determine number of individuals and loci
+n <- dim(G)[1]
+L <- dim(G)[2]
+
+# Generate synthetic phenotype and covariate data
+set.seed(1)
+y <- 2 * rnorm(n)
+
+set.seed(2)
+X <- rnorm(n)
+
+set.seed(3)
+E <- rnorm(n)
+```
+
+Now that we have ${\bf y}$, ${\bf X}$, ${\bf E}$, and ${\bf G}$, we can prepare our data for input into `SEAGLE`.  We will input our ${\bf y}$, ${\bf X}$, ${\bf E}$, and ${\bf G}$ into the `prep.SEAGLE` function.  The `intercept = 0` parameter indicates that the first column of ${\bf X}$ is not the all ones vector for the intercept.
+
+This preparation procedure formats the input data for the `SEAGLE` function by checking the dimensions of the input data.  It also pre-computes a QR decomposition for $\widetilde{\bf X} = \begin{pmatrix} {\bf 1}_{n} & {\bf X} & {\bf E} \end{pmatrix}$, where ${\bf 1}_{n}$ denotes the all ones vector of length $n$.
+
+```{r}
+objSEAGLE <- prep.SEAGLE(y=y, X=X, intercept=0, E=E, G=G)
+```
+
+Now we can input the prepared data into the `SEAGLE` function to compute the score-like test statistic $T$ and its corresponding p-value.  The `init.tau` and `init.sigma` parameters are the initial values for estimating $\tau$ and $\sigma$ in the REML EM algorithm.
+
+```{r}
+res <- SEAGLE(objSEAGLE, init.tau=0.5, init.sigma=0.5)
+res$T
+res$pv
+```
+
+The score-like test statistic $T$ for the G$\times$E effect and its corresponding p-value can be found in `res$T` and `res$pv`, respectively.
+
+## Acknowledgments
+
+Many thanks to Yueyang Huang for his help with generating the example data and PLINK1.9 code for this tutorial.
+

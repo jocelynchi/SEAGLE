@@ -3,16 +3,18 @@
 #' REML EM algorithm for estimating variance components
 #'
 #' @param y Vector of observed phenotypes
-#' @param Xtilde Matrix of covariates (first column contains the intercept)
+#' @param Xtilde Matrix of covariates (first column contains the intercept, last column contains the E factor for studying the GxE effect)
 #' @param qrXtilde Object containing QR decomposition of Xtilde
 #' @param beta Coefficient vector for covariate matrix Xtilde
 #' @param G Matrix of genotype markers
-#' @param init.sigma Initial sigma input (Default is 1)
-#' @param init.tau Initial tau input (Default is 1)
+#' @param init.sigma Initial sigma input (Default is 0.5)
+#' @param init.tau Initial tau input (Default is 0.5)
 #' @param tol Tolerance for convergence (Default is 1e-3)
 #' @param maxiters Maximum number of iterations (Default is 1000)
 #'
-estimate.vc <- function(y, Xtilde, qrXtilde, beta, G, init.sigma=1, init.tau=1, tol=1e-3, maxiters=1000) {
+#' @return Estimates for tau and sigma
+#'
+estimate.vc <- function(y, Xtilde, qrXtilde, beta, G, init.sigma=0.5, init.tau=0.5, tol=1e-3, maxiters=1000) {
 
   # Prep data
   n <- length(y)
@@ -72,6 +74,8 @@ estimate.vc <- function(y, Xtilde, qrXtilde, beta, G, init.sigma=1, init.tau=1, 
 #' @param tau Variance component from G main effect
 #' @param sigma Variance component from model noise epsilon
 #'
+#' @return Vector resulting from left multiplication of Rinv with input vector u
+#'
 Rinv.u <- function(G, AtG, GtAAtG, GtAu, u, tau, sigma) {
 
   L <- dim(G)[2]
@@ -92,6 +96,8 @@ Rinv.u <- function(G, AtG, GtAAtG, GtAu, u, tau, sigma) {
 #' @param tau Variance component from G main effect
 #' @param sigma Variance component from model noise epsilon
 #'
+#' @return Matrix resulting from left multiplication of Rinv with input matrix AtG
+#'
 Rinv.AtG <- function(G, AtG, GtAAtG, tau, sigma) {
 
   L <- dim(G)[2]
@@ -107,6 +113,8 @@ Rinv.AtG <- function(G, AtG, GtAAtG, tau, sigma) {
 #'
 #' @param qrXtilde Object from QR decomposition of Xtilde
 #' @param RHS Object on right hand side of null of Xtilde^T
+#'
+#' @return Matrix or vector resulting from left multiplication of At with matrix or vector input RHS
 #'
 applyAt <- function(qrXtilde, RHS) {
 

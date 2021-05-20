@@ -21,6 +21,9 @@ Rinv.u(G, AtG, GtAAtG, GtAu, u, tau, sigma)
 
 \item{sigma}{Variance component from model noise epsilon}
 }
+\value{
+Vector resulting from left multiplication of Rinv with input vector u
+}
 \description{
 Function for applying R inverse to u in REML EM algorithm
 }

@@ -23,7 +23,7 @@ makeSimData(
 
 \item{n}{Number of individuals}
 
-\item{L}{Number of SNPs (Default is 100)}
+\item{L}{Number of SNPs in the G matrix (Default is 100), should be a value between 1 and 604}
 
 \item{maf}{Minor allele frequency (Default is 0.01)}
 
@@ -40,6 +40,9 @@ makeSimData(
 \item{causal}{Number of causal SNPs (default is 40)}
 
 \item{seed}{Seed (Default is 12345)}
+}
+\value{
+Synthetic dataset containing y, X, E, G, epsilon, and number of causal SNPs
 }
 \description{
 This function generates synthetic from the fixed effects model described in the

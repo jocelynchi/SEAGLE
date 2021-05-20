@@ -1,5 +1,5 @@
 ---
-title: "Example 1: Genetic Matrix Data"
+title: "Example 1: Using SEAGLE with .txt Input Files"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{example-matrix}
@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This tutorial demonstrates how to use the `SEAGLE` package when the user inputs a genetic marker matrix ${\bf G}$ that in matrix form.  We'll begin by loading the `SEAGLE` package.
+This tutorial demonstrates how to use the `SEAGLE` package when the user inputs ${\bf y}$, ${\bf X}$, ${\bf E}$, and ${\bf G}$ from .txt files.  We'll begin by loading the `SEAGLE` package.
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -20,27 +20,30 @@ knitr::opts_chunk$set(
 library(SEAGLE)
 ```
 
-As an example, we'll generate some synthetic data for usage in this tutorial.  Let's consider a dataset with $n=5000$ individuals and $L=100$ loci, where the first $40$ are causal.  
+If you have your own files ready to read in for ${\bf y}$, ${\bf X}$, ${\bf E}$, and ${\bf G}$, you can read them into R using the `read.csv()` command.
 
-The `makeSimData` function generates a covariate matrix $\widetilde{\bf X} \in \mathbb{R}^{n \times 3}$, where the first column is the all ones vector for the intercept and the second and third columns are ${\bf X} \sim \text{N}(0,1)$ and ${\bf E}  \sim \text{N}(0,1)$, respectively.  The last two columns are scaled to have $0$ mean and unit variance.
-
-The `makeSimData` function additionally generates the genetic marker matrix ${\bf G}$ with synthetic haplotype data from the COSI software.  Detailed procedures for generating ${\bf G}$ can be found in the accompanying journal manuscript.  Finally, the `makeSimData` function also generates a continuous phenotype ${\bf y}$ according to the following fixed effects model
-$$
-{\bf y} = \tilde{\bf X} \boldsymbol{\gamma}_{\widetilde{\bf X}} + {\bf G}\boldsymbol{\gamma}_{G} + \text{diag}(E){\bf G}\boldsymbol{\gamma}_{GE} + {\bf e}.
-$$
-Here, $\boldsymbol{\gamma}_{\tilde{\bf X}}$ is the all ones vector of length $P=3$, $\boldsymbol{\gamma}_{G} \in \mathbb{R}^{L}$, $\boldsymbol{\gamma}_{GE}\in \mathbb{R}^{L}$, and ${\bf e} \sim \text{N}({\bf 0}, \sigma\, {\bf I}_{n})$.  The entries of $\boldsymbol{\gamma}_{G}$ and $\boldsymbol{\gamma}_{GE}$ pertaining to causal loci are set to be $\gamma_{G}$ = `gammaG` and $\gamma_{GE}$ = `gammaGE`, respectively. The remaining entries of $\boldsymbol{\gamma}_{G}$ and $\boldsymbol{\gamma}_{GE}$ pertaining to non-causal loci are set to $0$.
+As an example, we've included `y.txt`, `X.txt`, `E.txt`, and `G.txt` files in the `extdata` folder of this package.  The following code loads those files into R so we can use them in this tutorial.
 
 ```{r}
-dat <- makeSimData(H=cosihap, n=5000, L=100, gammaG=1, gammaGE=0, causal=40, seed=1)
+y_loc <- system.file("extdata", "y.txt", package = "SEAGLE")
+y <- as.numeric(unlist(read.csv(y_loc)))
 
+X_loc <- system.file("extdata", "X.txt", package = "SEAGLE")
+X <- as.matrix(read.csv(X_loc))
+
+E_loc <- system.file("extdata", "E.txt", package = "SEAGLE")
+E <- as.numeric(unlist(read.csv(E_loc)))
+
+G_loc <- system.file("extdata", "G.txt", package = "SEAGLE")
+G <- as.matrix(read.csv(G_loc))
 ```
 
-Now that we have our data, we can prepare it for use in the SEAGLE algorithm. We will input our ${\bf y}$, ${\bf X}$, ${\bf E}$, and ${\bf G}$ into the `prep.SEAGLE` function.  The `intercept = 1` parameter indicates that the first column of ${\bf X}$ is the all ones vector for the intercept.
+Now we can input ${\bf y}$, ${\bf X}$, ${\bf E}$, and ${\bf G}$ into the `prep.SEAGLE` function.  The `intercept = 1` parameter indicates that the first column of ${\bf X}$ is the all ones vector for the intercept.
 
 This preparation procedure formats the input data for the `SEAGLE` function by checking the dimensions of the input data.  It also pre-computes a QR decomposition for $\widetilde{\bf X}$.
 
 ```{r}
-objSEAGLE <- prep.SEAGLE(y=dat$y, X=dat$X, intercept=1, E=dat$E, G=dat$G)
+objSEAGLE <- prep.SEAGLE(y=as.matrix(y), X=X, intercept=1, E=E, G=G)
 ```
 
 Finally, we'll input the prepared data into the `SEAGLE` function to compute the score-like test statistic $T$ and its corresponding p-value.  The `init.tau` and `init.sigma` parameters are the initial values for $\tau$ and $\sigma$ employed in the REML EM algorithm.

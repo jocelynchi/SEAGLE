@@ -16,7 +16,8 @@ knitr::opts_chunk$set(
 
 This tutorial demonstrates how to use the `SEAGLE` package for chromosome-wide gene-based studies when the genotype data are from GWAS studies (.bed + .bim + .fam).  We recommend using PLINK1.9 available from [https://www.cog-genomics.org/plink/1.9/](https://www.cog-genomics.org/plink/1.9/) to generate a .raw file (see [https://www.cog-genomics.org/plink/2.0/formats#raw](https://www.cog-genomics.org/plink/2.0/formats#raw)) for each of the SNP sets. The .raw file records the allelic dosage for each SNP.
 
-Examples files containing GWAS data (.bed, .bim, and .fam files) for all the genes in chromosome 22 and a corresponding gene list in `glist-hg19` can be downloaded via the `SEAGLE-example4-data.zip` file from [http://jocelynchi.com/SEAGLE/SEAGLE-example4-data.zip](http://jocelynchi.com/SEAGLE/SEAGLE-example4-data.zip).  
+Examples files containing GWAS data (.bed, .bim, and .fam files) for all the genes in chromosome 22 and a corresponding gene list in `glist-hg19` can be downloaded via the `SEAGLE-example4-data.zip` file from [http://jocelynchi.com/SEAGLE/SEAGLE-example4-data.zip](http://jocelynchi.com/SEAGLE/SEAGLE-example4-data.zip).
+
 To follow along with the PLINK conversion procedures, you will first need to install the PLINK1.9 from [https://www.cog-genomics.org/plink/1.9/](https://www.cog-genomics.org/plink/1.9/) software and unzip the example `SEAGLE-example4-data.zip` file.  Afterwards, you can type the PLINK commands below in a command prompt or terminal window in the folder where these files are located. This will produce a .raw file for each gene that you can read into R to obtain a relevant genetic marker matrix ${\bf G}$ for each gene that you can input into `SEAGLE`.
 
 After unzipping the `SEAGLE-example4-data.zip` file, you will find two empty directories named `plink_bash` and `R_codes`.  The `plink_bash` directory is where we will write the PLINK1.9 commands that you will run to create the .raw files for each gene.  The `R_codes` directory is where we will write the R scripts for loading the resulting .raw files into R.
@@ -78,8 +79,9 @@ bash_plink <- NULL # bash command
 command <- c("#! /bin/bash", "#SBATCH --job-name=plink") # plink command
 codeR <- NULL # R code
 for (i in 1:nrow(glist_chr22)) {
-  #command <- c(command, paste0("plink --bfile 1kg_phase1_chr22_defined  --gene ", glist_chr22$V4[i]," --out ", glist_chr22$V4[i]," --export A") )
-  command <- c(command, paste0("plink --bfile 1kg_phase1_chr22 --make-set glist-hg19_chr22_updated --gene ", glist_chr22$V4[i]," --out ", glist_chr22$V4[i]," --export A") )
+  command <- c(command, paste0("plink --bfile 1kg_phase1_chr22 --make-set
+  glist-hg19_chr22_updated --gene ", glist_chr22$V4[i]," --out ",
+  glist_chr22$V4[i]," --export A") )
 
   # write R codes for reading .raw files, one R file for one gene
   codeR <- paste0(glist_chr22$V4[i], " <- read.delim(\"", glist_chr22$V4[i],".raw\", sep=\" \")")
@@ -108,8 +110,6 @@ Note that if you want to run the .sh files in the `plink_bash` directory on your
 
 Running the above code will setup the code and files to produce a single .raw file for each gene when running the commands in the `bash_plink.txt` file.  The .raw file for each gene will contain all the SNPs for that gene.
 
-As an example, we've included a subset of all the .raw files generated from the above code in the `int/extdata` directory of the `SEAGLE` package.
-
 ## Loading .raw files into R and extracting the genetic marker matrix ${\bf G}$
 
 Now that we have data for each gene in the .raw format, we can load the .raw files sequentially into R  for input into `SEAGLE` as follows.  We'll first load the `SEAGLE` package.
@@ -118,15 +118,9 @@ Now that we have data for each gene in the .raw format, we can load the .raw fil
 library(SEAGLE)
 ```
 
-The following code will load the `ACR.raw` file produced from the PLINK conversion for GWAS data for single gene analysis described above.  Of course, the actual file location will depend on where you stored the results of the PLINK conversion on your local drive.
+The following code shows how to test for the GxE interaction effect using `SEAGLE` on these genes.  To illustrate how to use SEAGLE, we will generate synthetic phenotype and covariate data for $n=1092$ study participants.
 
-```
-acr <- read.delim("ACR.raw", sep=" ")
-```
-
-The following code shows how to test for the GxE interaction effect using `SEAGLE` on these genes.  As an example, we generate synthetic phenotype and covariate data for $n=1092$ study participants.
-
-As an example, we've included .raw files for the following subset of genes from chromosome 22 in the `extdata` folder of this package: ACR, ADM2, ADORA2A, ADSL, AIFM3, and ALG12.  We've also included a corresponding gene list in `glist-hg19_chr22_example`.  In practice, you will want to specify your own `dir` for the directory where you've stored your .raw files.
+As an example, we've included .raw files for the following subset of genes from chromosome 22 in the `extdata` folder of this package: ACR, APOBEC3A, APOBEC3C, ARSA, ATF4, ATP5L2, BCRP2, BMS1P17, and BMS1P18.  We've also included a corresponding gene list in `glist-hg19_chr22_example`.  In practice, you will want to specify your own `dir` for the directory where you've stored your .raw files.
 
 ```{r}
 # Read in gene list

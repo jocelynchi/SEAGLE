@@ -40,7 +40,7 @@ G <- as.matrix(read.csv(G_loc))
 
 Now we can input ${\bf y}$, ${\bf X}$, ${\bf E}$, and ${\bf G}$ into the `prep.SEAGLE` function.  The `intercept = 1` parameter indicates that the first column of ${\bf X}$ is the all ones vector for the intercept.
 
-This preparation procedure formats the input data for the `SEAGLE` function by checking the dimensions of the input data.  It also pre-computes a QR decomposition for $\widetilde{\bf X}$.
+This preparation procedure formats the input data for the `SEAGLE` function by checking the dimensions of the input data.  It also pre-computes a QR decomposition for $\widetilde{\bf X} = \begin{pmatrix} {\bf 1}_{n} & {\bf X} & {\bf E} \end{pmatrix}$, where ${\bf 1}_{n}$ denotes the all ones vector of length $n$.
 
 ```{r}
 objSEAGLE <- prep.SEAGLE(y=as.matrix(y), X=X, intercept=1, E=E, G=G)

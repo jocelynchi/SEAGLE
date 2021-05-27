@@ -37,7 +37,7 @@ dat <- makeSimData(H=cosihap, n=5000, L=100, gammaG=1, gammaGE=0, causal=40, see
 
 Now that we have our data, we can prepare it for use in the SEAGLE algorithm. We will input our ${\bf y}$, ${\bf X}$, ${\bf E}$, and ${\bf G}$ into the `prep.SEAGLE` function.  The `intercept = 1` parameter indicates that the first column of ${\bf X}$ is the all ones vector for the intercept.
 
-This preparation procedure formats the input data for the `SEAGLE` function by checking the dimensions of the input data.  It also pre-computes a QR decomposition for $\widetilde{\bf X}$.
+This preparation procedure formats the input data for the `SEAGLE` function by checking the dimensions of the input data.  It also pre-computes a QR decomposition for $\widetilde{\bf X} = \begin{pmatrix} {\bf 1}_{n} & {\bf X} & {\bf E} \end{pmatrix}$, where ${\bf 1}_{n}$ denotes the all ones vector of length $n$.
 
 ```{r}
 objSEAGLE <- prep.SEAGLE(y=dat$y, X=dat$X, intercept=1, E=dat$E, G=dat$G)

@@ -1,6 +1,6 @@
 ---
 title: "Example 4: Using SEAGLE for Chromosome-Wide Gene-Based Analysis"
-output: pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{example-genetic-data-input}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,11 +14,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-This tutorial demonstrates how to use the `SEAGLE` package for chromosome-wide gene-based studies when the genotype data are from GWAS studies (.bed + .bim + .fam).  We recommend using PLINK1.9 available from [https://www.cog-genomics.org/plink/1.9/](https://www.cog-genomics.org/plink/1.9/) to generate a .raw file (see [https://www.cog-genomics.org/plink/2.0/formats#raw](https://www.cog-genomics.org/plink/2.0/formats#raw)) for each of the SNP sets. The .raw file records the allelic dosage for each SNP.
+This tutorial demonstrates how to use the `SEAGLE` package for chromosome-wide gene-based studies when the genotype data are from GWAS studies (.bed + .bim + .fam).  We recommend using PLINK1.9 available from [https://www.cog-genomics.org/plink/1.9/](https://www.cog-genomics.org/plink/1.9/) to generate a .raw file for each of the SNP sets.  For more information on .raw files, please refer to [https://www.cog-genomics.org/plink/2.0/formats#raw](https://www.cog-genomics.org/plink/2.0/formats#raw).  The .raw file records the allelic dosage for each SNP.
 
 Examples files containing GWAS data (.bed, .bim, and .fam files) for all the genes in chromosome 22 and a corresponding gene list in `glist-hg19` can be downloaded via the `SEAGLE-example4-data.zip` file from [http://jocelynchi.com/SEAGLE/SEAGLE-example4-data.zip](http://jocelynchi.com/SEAGLE/SEAGLE-example4-data.zip).
 
-To follow along with the PLINK conversion procedures, you will first need to install the PLINK1.9 from [https://www.cog-genomics.org/plink/1.9/](https://www.cog-genomics.org/plink/1.9/) software and unzip the example `SEAGLE-example4-data.zip` file.  Afterwards, you can type the PLINK commands below in a command prompt or terminal window in the folder where these files are located. This will produce a .raw file for each gene that you can read into R to obtain a relevant genetic marker matrix ${\bf G}$ for each gene that you can input into `SEAGLE`.
+To follow along with the PLINK conversion procedures, you will first need to install PLINK1.9 from [https://www.cog-genomics.org/plink/1.9/](https://www.cog-genomics.org/plink/1.9/) and unzip the example `SEAGLE-example4-data.zip` file.  Afterwards, you can type the PLINK commands below in a command prompt or terminal window in the folder where these files are located. This will produce a .raw file for each gene that you can read into R to obtain a relevant genetic marker matrix ${\bf G}$ that you can input into `SEAGLE`.
 
 After unzipping the `SEAGLE-example4-data.zip` file, you will find two empty directories named `plink_bash` and `R_codes`.  The `plink_bash` directory is where we will write the PLINK1.9 commands that you will run to create the .raw files for each gene.  The `R_codes` directory is where we will write the R scripts for loading the resulting .raw files into R.
 
@@ -62,11 +62,11 @@ write.table(glist_chr22, "glist-hg19_chr22_updated", col.names = F, row.names = 
 glist_chr22$V4 <- sub("-", "_", glist_chr22$V4)
 ```
 
-Now we will use PLINK1.9 to create a .raw file for each gene in chromosome 22, which includes all SNPs for a given gene.  The following code will produce a sequence of bash files to produce .raw files for each gene in `glist_chr22`.  It will also produce a corresponding sequence of R code snippets for reaching each .raw file into R.  Each bash file will run PLINK1.9 for $n=50$ genes at a time.
+Now we will use PLINK1.9 to create a .raw file for each gene in chromosome 22, which includes all SNPs for a given gene.  The following code will produce a sequence of bash files to produce .raw files for each gene in `glist_chr22`.  It will also produce a corresponding sequence of R code snippets for reaching each .raw file into R.  Each bash file will run PLINK1.9 for $num_genes=50$ genes at a time.
 
 ```
 # of plink commands per job
-n <- 50
+num_genes <- 50
 
 # Write a single bash file to run plink for defining genes
 command <- c("#! /bin/bash", "#SBATCH --job-name=plink")
@@ -89,14 +89,14 @@ for (i in 1:nrow(glist_chr22)) {
   writeLines(codeR, fileConn)
   close(fileConn)
 
-  if(i %% n == 0 | i==nrow(glist_chr22)){
+  if(i %% num_genes == 0 | i==nrow(glist_chr22)){
     # write plink commands in bash file
-    fileConn<-file(paste0(dir,"plink_bash/plink_job",i-n+1,"-",i,".sh"))
+    fileConn<-file(paste0(dir,"plink_bash/plink_job",i-num_genes+1,"-",i,".sh"))
     writeLines(command, fileConn)
     close(fileConn)
 
     command <- c("#! /bin/bash", "#SBATCH --job-name=plink")
-    bash_plink <- c(bash_plink, paste0("sbatch plink_job",i-n+1,"-",i,".sh"))
+    bash_plink <- c(bash_plink, paste0("sbatch plink_job",i-num_genes+1,"-",i,".sh"))
   }
 }
 

@@ -2,7 +2,7 @@
 title: "Example 4: Using SEAGLE for Chromosome-Wide Gene-Based Analysis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{example-genetic-data-input}
+  %\VignetteIndexEntry{example4}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -48,7 +48,7 @@ Notice that in this example, there are 4 duplicated genes given by the following
 # RIMBP3C: chr22:21,899,646-21,905,750(GRCh37/hg19 by Ensembl)
 ```
 
-Then we will update our gene list by removing these duplicated genes.
+We will update our gene list by manually updating the positions of the duplicated genes.
 
 ```
 glist_chr22 <- glist_chr22[!duplicated(glist_chr22$V4),]
@@ -67,13 +67,6 @@ Now we will use PLINK1.9 to create a .raw file for each gene in chromosome 22, w
 ```
 # of plink commands per job
 num_genes <- 50
-
-# Write a single bash file to run plink for defining genes
-command <- c("#! /bin/bash", "#SBATCH --job-name=plink")
-command <- c(command, "plink --bfile 1kg_phase1_chr22 --make-set glist-hg19_chr22_updated --out 1kg_phase1_chr22_defined --make-bed")
-fileConn<-file(paste0("Define_sets.sh"))
-writeLines(command, fileConn)
-close(fileConn)
 
 bash_plink <- NULL # bash command
 command <- c("#! /bin/bash", "#SBATCH --job-name=plink") # plink command

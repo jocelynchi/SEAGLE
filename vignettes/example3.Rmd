@@ -2,7 +2,7 @@
 title: "Example 3: Using SEAGLE with GWAS or Next Generation Sequencing Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{example-genetic-data-input}
+  %\VignetteIndexEntry{example3}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

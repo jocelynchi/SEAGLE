@@ -2,7 +2,7 @@
 title: "Example 2: Using SEAGLE with Simulated Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{example-matrix}
+  %\VignetteIndexEntry{example2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

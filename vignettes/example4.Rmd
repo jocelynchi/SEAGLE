@@ -62,7 +62,7 @@ write.table(glist_chr22, "glist-hg19_chr22_updated", col.names = F, row.names = 
 glist_chr22$V4 <- sub("-", "_", glist_chr22$V4)
 ```
 
-Now we will use PLINK1.9 to create a .raw file for each gene in chromosome 22, which includes all SNPs for a given gene.  The following code will produce a sequence of bash files to produce .raw files for each gene in `glist_chr22`.  It will also produce a corresponding sequence of R code snippets for reaching each .raw file into R.  Each bash file will run PLINK1.9 for $num_genes=50$ genes at a time.
+Now we will use PLINK1.9 to create a .raw file for each gene in chromosome 22, which includes all SNPs for a given gene.  The following code will produce a sequence of bash files to produce .raw files for each gene in `glist_chr22`.  It will also produce a corresponding sequence of R code snippets for reaching each .raw file into R.  Each bash file will run PLINK1.9 for `num_genes=50` genes at a time.
 
 ```
 # of plink commands per job

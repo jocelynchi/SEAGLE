@@ -24,10 +24,10 @@ devtools::install_github('jocelynchi/SEAGLE')
 
 We've included four examples on how to use the `SEAGLE` software.  
 
-1. The [first example](articles/example1.html) shows how to use `SEAGLE` when the user inputs phenotype, covariate, and genotype data from .txt files.  
-2. The [second example](articles/example2.html) shows how to use `SEAGLE` when the user has a genetic marker matrix **G** that is already in matrix form.  
-3. The [third example](articles/example3.html) shows how to use `SEAGLE` when the user has genotype data from GWAS or next generation sequencing studies.
-4. The [fourth example](articles/example4.html) shows how to use `SEAGLE` for chromosome-wide analysis when the user has genotype data from GWAS studies.
+1. The [first example](https://jocelynchi.github.io/SEAGLE/articles/example1.html) shows how to use `SEAGLE` when the user inputs phenotype, covariate, and genotype data from .txt files.  
+2. The [second example](https://jocelynchi.github.io/SEAGLE/articles/example2.html) shows how to use `SEAGLE` when the user has a genetic marker matrix **G** that is already in matrix form.  
+3. The [third example](https://jocelynchi.github.io/SEAGLE/articles/example3.html) shows how to use `SEAGLE` when the user has genotype data from GWAS or next generation sequencing studies.
+4. The [fourth example](https://jocelynchi.github.io/SEAGLE/articles/example4.html) shows how to use `SEAGLE` for chromosome-wide analysis when the user has genotype data from GWAS studies.
 
 ## Citing SEAGLE
 

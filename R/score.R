@@ -14,9 +14,9 @@
 #' @importFrom CompQuadForm davies liu
 #'
 #' @examples
-#' #dat <- makeSimData(H=cosihap, n=5000, L=100, gammaG=1, gammaGE=0, causal=40, seed=1)
-#' #objSEAGLE <- prep.SEAGLE(y=dat$y, X=dat$X, intercept=1, E=dat$E, G=dat$G)
-#' #res <- SEAGLE(objSEAGLE, init.tau=0.5, init.sigma=0.5)
+#' dat <- makeSimData(H=cosihap, n=500, L=10, gammaG=1, gammaGE=0, causal=4, seed=1)
+#' objSEAGLE <- prep.SEAGLE(y=dat$y, X=dat$X, intercept=1, E=dat$E, G=dat$G)
+#' res <- SEAGLE(objSEAGLE, init.tau=0.5, init.sigma=0.5)
 #'
 #' @export
 #'

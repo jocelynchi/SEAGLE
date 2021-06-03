@@ -1,6 +1,6 @@
 Package: SEAGLE
 Type: Package
-Title: Scalable Exact Algorithm for Large-Scale Set-based GxE Tests in Biobank Data
+Title: Scalable Exact Algorithm for Large-Scale Set-Based GxE Tests
 Version: 1.0.0
 Authors@R: c(person("Jocelyn", "Chi", email = "jocetchi@gmail.com",
                   role = c("aut", "cre")),
@@ -18,12 +18,14 @@ Description:
     tests, a widely used strategy to boost overall GxE signals and to evaluate the 
     joint GxE effect of multiple variants from a biologically meaningful unit 
     (e.g., gene). 
-    We present SEAGLE, a Scalable Exact AlGorithm for Large-scale Set-based 
-    GxE tests, to permit GxE VC test scalable to biobank data. SEAGLE employs modern 
+    We present `SEAGLE`, a Scalable Exact AlGorithm for Large-scale Set-based 
+    GxE tests, to permit GxE VC test scalable to biobank data. `SEAGLE` employs modern 
     matrix computations to achieve the same “exact” results as the original GxE VC 
     tests, and does not impose additional assumptions nor relies on approximations. 
-    SEAGLE can easily accommodate sample sizes in the order of $10^5$, is implementable 
+    `SEAGLE` can easily accommodate sample sizes in the order of 10^5, is implementable 
     on standard laptops, and does not require specialized equipment. 
+    The accompanying manuscript for this package can be found at Chi, Ipsen, Hsiao, 
+    Lin, Wang, Lee, Lu, and Tzeng. (2021+) <arXiv:2105.03228>.
 URL: https://github.com/jocelynchi/SEAGLE
 License: GPL-3
 Depends:

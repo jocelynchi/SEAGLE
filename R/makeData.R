@@ -21,7 +21,7 @@
 #' @import Matrix
 #'
 #' @examples
-#' #dat <- makeSimData(H=cosihap, n=5000, L=100, gammaG=1, gammaGE=0, causal=40, seed=1)
+#' dat <- makeSimData(H=cosihap, n=500, L=10, gammaG=1, gammaGE=0, causal=4, seed=1)
 #'
 #' @export
 #'

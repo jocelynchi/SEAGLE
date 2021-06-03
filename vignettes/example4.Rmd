@@ -158,34 +158,25 @@ for (i in 1:num_genes) {
   G <- as.matrix(Gtemp[,-c(1:6)])
   L <- dim(G)[2]                ## number of SNPs
   
-  # Remove missing SNPs and individuals
-  ff = 0.02
-  keep.snp  = (colMeans(is.na(G))<ff)
-  keep.indvl= (rowSums(is.na(G[,keep.snp])) == 0)
-  newsnp    = G[keep.indvl, keep.snp]
-
   # Make weights
-  avg_newsnp <- colMeans(newsnp)
+  avg_newsnp <- colMeans(G)
   fA  = avg_newsnp/2            ## freq of allele "A"
   fa  = 1-fA                    ## freq of allele "a"
   maf = fA; maf[fA>0.5]= fa[fA>0.5]## maf should be b/w 0 and 0.5
-  newsnp = newsnp[ ,maf>0]      ## only keep those SNPs with MAF>0
+  G = G[ ,maf>0]                ## only keep those SNPs with MAF>0
   maf <- maf[maf > 0]           ## Keep only MAF > 0)
   wt   = sqrt(maf^(-3/4))       ## Note we take the square root here
   if (length(wt) > 1) {
-    G_final    = newsnp %*% diag(wt) ## Input this G
+    G_final    = G %*% diag(wt) ## Input this G
   } else {
     T.list[i] <- NA
     pv.list[i] <- NA
     next
   }
-  y_final <- y[keep.indvl]
-  X_final <- X[keep.indvl,]
-  E_final <- E[keep.indvl]
-  
+
   # Run SEAGLE
-  objSEAGLE <- prep.SEAGLE(y=y_final, X=X_final, intercept=0, 
-                           E=E_final, G=G_final)
+  objSEAGLE <- prep.SEAGLE(y=y, X=X, intercept=0, 
+                           E=E, G=G_final)
   res <- SEAGLE(objSEAGLE, init.tau=0.5, init.sigma=0.5)
   
   # Save T and p-value into output lists

@@ -35,7 +35,7 @@ glist_chr22 <- subset(glist, glist$V1 == 22)
 Next, we will remove any duplicated genes for chromosome 22 in our gene list.
 
 ```
-dup <- glist_chr22$V4[duplicated(glist_chr22$V4)] # find duplciated gene
+dup <- glist_chr22$V4[duplicated(glist_chr22$V4)] # find duplicated gene
 dup
 ```
 

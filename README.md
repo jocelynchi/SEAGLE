@@ -31,15 +31,21 @@ We've included four examples on how to use the `SEAGLE` software.
 
 ## Citing SEAGLE
 
-The accompanying journal manuscript for `SEAGLE` can be found at [arXiv:2105.03228](https://arxiv.org/abs/2105.03228).  To cite the `SEAGLE` software, please use the following BibTeX entry.
+The accompanying journal manuscript for `SEAGLE` can be found online [here](https://www.frontiersin.org/articles/10.3389/fgene.2021.710055/full).  To cite the `SEAGLE` software, please use the following BibTeX entry.
 
 ```
-@misc{seagle,
+@article{seagle,
   author = {Jocelyn T. Chi and Ilse C. F. Ipsen and Tzu-Hung Hsiao and Ching-Heng Lin and Li-San Wang and Wan-Ping Lee and Tzu-Pin Lu and Jung-Ying Tzeng},
-  title = {SEAGLE: A Scalable Exact Algorithm for Large-Scale Set-based GxE Tests in Biobank Data},
-  year = {2021+},
+  title = {SEAGLE: A Scalable Exact Algorithm for Large-Scale Set-Based Gene-Environment Interaction Tests in Biobank Data},
+  year = {2021},
   arxiv = {https://arxiv.org/abs/2105.03228},
-  howpublished = {arXiv:2105.03228 [stat.CO]}
+  journal = {Frontiers in Genetics, section Statistical Genetics and Methodology},
+  volume = {12},
+  pages = {1878},
+  pdf = {https://www.frontiersin.org/articles/10.3389/fgene.2021.710055/pdf},
+  code = {http://jocelynchi.com/SEAGLE},
+  doi = {10.3389/fgene.2021.710055},
+  link = {https://www.frontiersin.org/articles/10.3389/fgene.2021.710055/full}
 }
 ```
 

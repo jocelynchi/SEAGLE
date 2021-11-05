@@ -1,11 +1,16 @@
 citHeader("To cite SEAGLE in publications use:")
 
 citEntry(
-  entry    = "Misc",
+  entry    = "Article",
   title    = "SEAGLE: A Scalable Exact Algorithm for Large-Scale Set-based GxE Tests in Biobank Data",
   author   = "Jocelyn T. Chi and Ilse C. F. Ipsen and Tzu-Hung Hsiao and Ching-Heng Lin and Li-San Wang and Wan-Ping Lee and Tzu-Pin Lu and Jung-Ying Tzeng",
-  journal  = "arXiv:2105.03228 [stat.CO]",
-  year     = "2021+",
-  url      = "https://arxiv.org/abs/2105.03228",
-  textVersion = paste("Chi, J. T., Ipsen, I. C. F., Hsiao, T.-H., Lin, C.-H., Wang, L.-S., Lee, W.-P., Lu, T.-P., & Tzeng, J.-Y. (2021+). SEAGLE: A Scalable Exact Algorithm for Large-Scale Set-based GxE Tests in Biobank Data. arXiv:2105.03228 [stat.CO].")
+  journal  = "Frontiers in Genetics, section Statistical Genetics and Methodology",
+  year     = "2021",
+  volume   = "12",
+  pages    = "1878",
+  doi      = "10.3389/fgene.2021.710055",
+  issn     = "1664-8021", 
+  url      = "https://www.frontiersin.org/articles/10.3389/fgene.2021.710055/full",
+  textVersion = paste("Chi, J. T., Ipsen, I. C. F., Hsiao, T.-H., Lin, C.-H., Wang, L.-S., Lee, W.-P., Lu, T.-P., & Tzeng, J.-Y. (2021+). SEAGLE: A Scalable Exact Algorithm for Large-Scale Set-Based Gene-Environment Interaction Tests in Biobank Data. Frontiers in Genetics, Section Statistical Genetics and Methodology, 12, 1878. https://doi.org/10.3389/fgene.2021.710055.")
 )
+

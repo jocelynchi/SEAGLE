@@ -1,7 +1,7 @@
 Package: SEAGLE
 Type: Package
-Title: Scalable Exact Algorithm for Large-Scale Set-Based GxE Tests
-Version: 1.0.0
+Title: Scalable Exact Algorithm for Large-Scale Set-Based Gene-Environment Interaction Tests
+Version: 1.0.1
 Authors@R: c(person("Jocelyn", "Chi", email = "jocetchi@gmail.com",
                   role = c("aut", "cre")),
             person("Ilse", "Ipsen", email = "ipsen@ncsu.edu",
